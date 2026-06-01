@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/**/*.js", "use": "@vercel/node" },
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.xlsx", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/Bang_tinh_chi_phi_nuoi_con.xlsx", "dest": "/Bang_tinh_chi_phi_nuoi_con.xlsx" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
