@@ -1,3 +1,5 @@
+Last login: Mon Jun  1 21:43:52 on ttys001
+macbookairm2@MacBook-Air-cua-MacBook-2 ~ %  cat /Users/macbookairm2/Downloads/vercel-project/index.html 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -779,9 +781,14 @@
         <div class="success-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <h3 class="success-title">Đã ghi nhận!</h3>
-        <p class="success-msg"><strong>Hà Nguyễn</strong> sẽ gửi bảng tính qua Zalo trong vòng <strong>15–30 phút</strong>. Nếu cần nhanh, nhắn thêm qua <a href="https://zalo.me/0886614286" style="color:#1a3c2e;font-weight:500;">Zalo 0886 614 286</a> nhé!</p>
-        <p style="font-size:12px;color:var(--muted)">Trong lúc chờ — kéo xuống xem bảng tính có gì bên trong</p>
+        <h3 class="success-title">Cảm ơn bạn!</h3>
+        <p class="success-msg">Bảng tính đã sẵn sàng — tải về ngay bên dưới nhé!</p>
+        <a href="/Bang_tinh_chi_phi_nuoi_con.xlsx" download="Bang_tinh_chi_phi_nuoi_con.xlsx"
+           style="display:inline-flex;align-items:center;gap:8px;background:var(--forest);color:var(--white);font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:500;padding:14px 28px;border-radius:10px;text-decoration:none;margin:4px 0;transition:opacity 0.2s;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Tải bảng tính Excel — miễn phí
+        </a>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px;">Hoặc nhắn <a href="https://zalo.me/0886614286" style="color:var(--forest);font-weight:500;">Zalo 0886 614 286</a> nếu cần hỗ trợ</p>
       </div>
     </div>
   </div>
@@ -1010,7 +1017,7 @@
 </footer>
 
 <script>
-  function handleSubmit() {
+  async function handleSubmit() {
     const phone = document.getElementById('phone').value.trim();
     const errMsg = document.getElementById('error-msg');
     if (!phone) {
@@ -1019,16 +1026,36 @@
       return;
     }
     errMsg.style.display = 'none';
+
+    // Hiện loading trên button
+    const btn = document.querySelector('.cta-btn');
+    const btnText = btn.querySelector('.btn-text');
+    const originalHTML = btnText.innerHTML;
+    btnText.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Đang gửi...';
+    btn.disabled = true;
+
+    try {
+      await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('name').value.trim(),
+          phone: phone,
+          email: document.getElementById('email').value.trim(),
+        }),
+      });
+    } catch (e) {
+      // Vẫn tiếp tục dù lỗi mạng — không chặn khách tải file
+      console.warn('Submit error (non-blocking):', e);
+    }
+
+    // Hiện success state
     document.getElementById('formContent').style.display = 'none';
     const s = document.getElementById('successState');
     s.style.display = 'flex';
-    // Here you would normally POST to your backend/CRM
-    console.log('Lead:', {
-      name: document.getElementById('name').value,
-      phone: phone,
-      email: document.getElementById('email').value,
-      timestamp: new Date().toISOString()
-    });
+
+    // Scroll nhẹ đến form card
+    document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   // Scroll reveal
@@ -1050,3 +1077,4 @@
 </script>
 </body>
 </html>
+macbookairm2@MacBook-Air-cua-MacBook-2 ~ % 
